@@ -1,1 +1,38 @@
-<p>document-form works!</p>
+<div style="max-width: 600px; margin-top: 20px; font-family: sans-serif;">
+  <h2>Configure Enterprise Knowledge Asset</h2>
+  
+  <form [formGroup]="docForm" (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; gap: 15px;">
+    <div>
+      <label style="display: block; font-weight: bold; margin-bottom: 5px;">Document Title:</label>
+      <input type="text" formControlName="title" style="width: 100%; padding: 8px;" />
+      
+      @if (docForm.get('title')?.touched && docForm.get('title')?.errors?.['required']) {
+        <small style="color: red; display: block; margin-top: 5px;">Document title field is completely mandatory.</small>
+      }
+      @if (docForm.get('title')?.touched && docForm.get('title')?.errors?.['minlength']) {
+        <small style="color: red; display: block; margin-top: 5px;">Title values must contain at least 5 character entries.</small>
+      }
+    </div>
+
+    <div>
+      <label style="display: block; font-weight: bold; margin-bottom: 5px;">Knowledge Payload Content:</label>
+      <textarea formControlName="content" rows="6" style="width: 100%; padding: 8px;"></textarea>
+      
+      @if (docForm.get('content')?.touched && docForm.get('content')?.errors?.['required']) {
+        <small style="color: red; display: block; margin-top: 5px;">Body text is essential to supply AI model contexts.</small>
+      }
+    </div>
+
+    <div>
+      <label style="display: block; font-weight: bold; margin-bottom: 5px;">Lifecycle Deployment Phase:</label>
+      <select formControlName="status" style="width: 100%; padding: 8px;">
+        <option value="Draft">Draft Mode</option>
+        <option value="Approved">Active Production Deployment</option>
+      </select>
+    </div>
+
+    <button type="submit" [disabled]="docForm.invalid" style="padding: 10px; background: #007bff; color: white; border: none; cursor: pointer;">
+      Save Database Context
+    </button>
+  </form>
+</div>
