@@ -31,4 +31,14 @@ export class DocumentService {
   deleteDocument(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  // Fetch single document by its ID 
+  getDocumentById(id: number): Observable<Document> {                                                                                                                                                                                                                     
+    return this.http.get<Document>(`${this.apiUrl}/${id}`);                                                                                                                                                                                                               
+  } 
+
+  // Peform async PUT Request to update an existing document
+  updateDocument(id: number, doc:Document): Observable<Document> {
+    return this.http.put<Document>(`${this.apiUrl}/${id}`, doc); 
+  }
 }
