@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy,signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { Subscription, filter } from 'rxjs';
 import { DocumentService, Document } from '../../services/document';
 import { DocumentRowComponent } from '../document-row/document-row';
 
 @Component({
   selector: 'app-document-dashboard',
   standalone: true,
-  imports: [CommonModule, DocumentRowComponent],
+  imports: [CommonModule, DocumentRowComponent, RouterOutlet],
   templateUrl: './document-dashboard.html'
 })
 // Angular Rule 4: Child component structural layer inside root component hierarchy
@@ -34,6 +34,17 @@ export class DocumentDashboardComponent implements OnInit, OnDestroy {
         if (params['id']) this.selectedDocId = params['id'];
       })
     );
+
+    // Angular Rule 10: Re-fetch documents on NavigationEnd back to /dashboard to sync signal with latest backend state
+    this.sub.add(
+          this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd),
+            filter(event => (event as NavigationEnd).urlAfterRedirects === '/dashboard')
+          ).subscribe(() => {
+            this.loadDocs(); // refresh signal with latest backend data
+          })
+        );
+
   }
 
   loadDocs() {
