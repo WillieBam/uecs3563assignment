@@ -1,38 +1,60 @@
 <div style="max-width: 600px; margin-top: 20px; font-family: sans-serif;">
-  <h2>Configure Enterprise Knowledge Asset</h2>
-  
+  <!-- Angular Rule 1: Interpolation dynamically switches heading between create/edit modes -->
+  <h2>{{ isEditMode ? 'Edit Knowledge Asset' : 'Configure Enterprise Knowledge Asset' }}</h2>
+
+  <!-- Angular Rule 3: (ngSubmit) event binding captures the form submission trigger -->
   <form [formGroup]="docForm" (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; gap: 15px;">
-    <div>
-      <label style="display: block; font-weight: bold; margin-bottom: 5px;">Document Title:</label>
-      <input type="text" formControlName="title" style="width: 100%; padding: 8px;" />
-      
-      @if (docForm.get('title')?.touched && docForm.get('title')?.errors?.['required']) {
-        <small style="color: red; display: block; margin-top: 5px;">Document title field is completely mandatory.</small>
-      }
-      @if (docForm.get('title')?.touched && docForm.get('title')?.errors?.['minlength']) {
-        <small style="color: red; display: block; margin-top: 5px;">Title values must contain at least 5 character entries.</small>
-      }
+
+    <!-- Angular Rule 8: formGroupName binds this div to the nested metadata FormGroup -->
+    <div formGroupName="metadata">
+      <div>
+        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Document Title:</label>
+        <input type="text" formControlName="title" style="width: 100%; padding: 8px;" />
+
+        <!-- Angular Rule 9: Error messages shown conditionally only when the control is touched -->
+        @if (docForm.get('metadata.title')?.touched && docForm.get('metadata.title')?.errors?.['required']) {
+          <small style="color: red; display: block; margin-top: 5px;">Document title field is completely mandatory.</small>
+        }
+        @if (docForm.get('metadata.title')?.touched && docForm.get('metadata.title')?.errors?.['minlength']) {
+          <small style="color: red; display: block; margin-top: 5px;">Title values must contain at least 5 character entries.</small>
+        }
+      </div>
+
+      <div style="margin-top: 10px;">
+        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Lifecycle Deployment Phase:</label>
+        <select formControlName="status" style="width: 100%; padding: 8px;">
+          <option value="Draft">Draft Mode</option>
+          <option value="Approved">Active Production Deployment</option>
+        </select>
+      </div>
     </div>
 
     <div>
       <label style="display: block; font-weight: bold; margin-bottom: 5px;">Knowledge Payload Content:</label>
       <textarea formControlName="content" rows="6" style="width: 100%; padding: 8px;"></textarea>
-      
+
+      <!-- Angular Rule 9: Error message shown conditionally only when the control is touched -->
       @if (docForm.get('content')?.touched && docForm.get('content')?.errors?.['required']) {
         <small style="color: red; display: block; margin-top: 5px;">Body text is essential to supply AI model contexts.</small>
       }
     </div>
 
-    <div>
-      <label style="display: block; font-weight: bold; margin-bottom: 5px;">Lifecycle Deployment Phase:</label>
-      <select formControlName="status" style="width: 100%; padding: 8px;">
-        <option value="Draft">Draft Mode</option>
-        <option value="Approved">Active Production Deployment</option>
-      </select>
+    <!-- Angular Rule 8: formArrayName binds this div to the tags FormArray for dynamic control rendering -->
+    <div formArrayName="tags">
+      <label style="display: block; font-weight: bold; margin-bottom: 5px;">Knowledge Tags:</label>
+      @for (tag of tags.controls; track $index; let i = $index) {
+        <div style="display: flex; gap: 8px; margin-bottom: 6px;">
+          <input type="text" [formControlName]="i" placeholder="Enter tag keyword..." style="flex: 1; padding: 6px;" />
+          <!-- Angular Rule 3: (click) event binding removes FormControl at index i from FormArray -->
+          <button type="button" (click)="removeTag(i)" style="background: #dc3545; color: white; border: none; padding: 4px 10px; cursor: pointer;">✕</button>
+        </div>
+      }
+      <!-- Angular Rule 3: (click) event binding pushes a new empty FormControl into the FormArray -->
+      <button type="button" (click)="addTag()" style="padding: 5px 12px; cursor: pointer; margin-top: 4px;">+ Add Tag</button>
     </div>
 
     <button type="submit" [disabled]="docForm.invalid" style="padding: 10px; background: #007bff; color: white; border: none; cursor: pointer;">
-      Save Database Context
+      {{ isEditMode ? 'Update Document' : 'Save Database Context' }}
     </button>
   </form>
 </div>

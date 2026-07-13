@@ -1,0 +1,22 @@
+/* Angular Rule 2: CSS class rules paired with [ngClass] conditional class bindings */
+.approved-badge {
+  color: #155724;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.85em;
+  display: inline-block;
+}
+
+.draft-badge {
+  color: #856404;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.85em;
+  display: inline-block;
+}

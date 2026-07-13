@@ -1,12 +1,14 @@
 import { Routes } from '@angular/router';
 import { DocumentDashboardComponent } from './components/document-dashboard/document-dashboard';
 import { DocumentFormComponent } from './components/document-form/document-form';
+import { DocumentViewComponent } from './components/document-view/document-view';
 
 export const routes: Routes = [
   // Angular Rule 11: Route registering and matching mapping to dashboard component
   { path: 'dashboard', component: DocumentDashboardComponent, children: [
       // Angular Rule 13: Nested / Child route configuration for previews
-      { path: 'preview/:id', component: DocumentDashboardComponent }
+      { path: 'view/:id', component: DocumentViewComponent },
+      { path: 'edit/:id', component: DocumentFormComponent }
   ]},
   { path: 'manage-form', component: DocumentFormComponent },
   // Angular Rule 11: Route redirect mapping for root pathing 
