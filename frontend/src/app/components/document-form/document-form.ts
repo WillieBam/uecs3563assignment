@@ -8,7 +8,7 @@ import { DocumentService } from '../../services/document';
   selector: 'app-document-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './document-form.component.html'
+  templateUrl: './document-form.html'
 })
 export class DocumentFormComponent implements OnInit {
   docForm!: FormGroup;
@@ -32,7 +32,7 @@ export class DocumentFormComponent implements OnInit {
     // Angular Rule 9: Validation gate ensuring application data models evaluate cleanly 
     if (this.docForm.valid) {
       this.docService.saveDocument(this.docForm.value).subscribe(() => {
-        // Angular Rule 14: Executing programmatic URL routing logic [cite: 68]
+        // Angular Rule 14: Executing programmatic URL routing logic
         this.router.navigate(['/dashboard']);
       });
     }

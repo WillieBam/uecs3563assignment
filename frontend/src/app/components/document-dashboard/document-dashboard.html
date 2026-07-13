@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (doc of documents; track doc.id; let idx = $index, total = $count, isFirst = $first) {
+      @for (doc of documents(); track doc.id; let idx = $index, total = $count, isFirst = $first) {
         <tr app-document-row 
             [documentData]="doc" 
             (deleteRequest)="onDeleteTriggered($event)">
