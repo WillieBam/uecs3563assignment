@@ -61,4 +61,9 @@ public class DocumentController {
         documentRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<KnowledgeDocument> getDocumentById(@PathVariable Long id) {
+    return documentRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
 }
