@@ -20,8 +20,14 @@
             (deleteRequest)="onDeleteTriggered($event)">
         </tr>
       } @empty {
-        <tr><td colspan="3" style="padding: 10px; text-align: center;">No corporate documentation stored.</td></tr>
+        <tr><td colspan="3" style="padding: 10px; text-align: center;">No documentation stored.</td></tr>
       }
     </tbody>
   </table>
 </div>
+
+<hr style="margin-top: 30px; border: 0; border-top: 1px solid #ccc;" />
+
+<div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border: 1px dashed #bbb;">
+  <router-outlet></router-outlet>
+</div>  
