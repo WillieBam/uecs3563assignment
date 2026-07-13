@@ -1,1 +1,11 @@
-<p>document-row works!</p>
+<td style="padding: 10px;" [title]="documentData.title">{{ documentData.title }}</td>
+    
+    <td style="padding: 10px;" [ngClass]="{'approved-badge': documentData.status === 'Approved', 'draft-badge': documentData.status === 'Draft'}">
+      {{ documentData.status }}
+    </td>
+    
+    <td style="padding: 10px;">
+      <button (click)="emitDelete()" style="color: white; background: #dc3545; border: none; padding: 4px 8px; cursor: pointer;">
+        Remove
+      </button>
+</td>
