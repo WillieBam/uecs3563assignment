@@ -1,11 +1,19 @@
-<td style="padding: 10px;" [title]="documentData.title">{{ documentData.title }}</td>
+<!-- Angular Rule 1: Property binding sets tooltip; interpolation renders title text -->
+<!-- Angular Rule 2: [style.opacity] style binding dims draft documents visually -->
+<td style="padding: 10px;"
+    [title]="documentData.title"
+    [style.opacity]="documentData.status === 'Draft' ? '0.65' : '1'">
+  {{ documentData.title }}
+</td>
     
+    <!-- Angular Rule 2: [ngClass] conditionally applies .approved-badge or .draft-badge CSS class -->
     <td style="padding: 10px;" [ngClass]="{'approved-badge': documentData.status === 'Approved', 'draft-badge': documentData.status === 'Draft'}">
       {{ documentData.status }}
     </td>
     
+    <!-- Angular Rule 3: (click) event bindings trigger navigation and delete actions -->
     <td style="padding: 10px;">
-      <button (click)="emitDelete()" style="color: white; background: #dc3545; border: none; padding: 4px 8px; cursor: pointer;">
-        Remove
-      </button>
-</td>
+      <button (click)="viewItem()" style="color: white; background: #3591dc; border: none; padding: 4px 8px; cursor: pointer;">View Details</button>
+      <button (click)="editItem()" style="color: white; background: #edad17; border: none; padding: 4px 8px; cursor: pointer;">Edit</button>
+      <button (click)="emitDelete()" style="color: white; background: #dc3545; border: none; padding: 4px 8px; cursor: pointer;">Remove</button>
+    </td>
