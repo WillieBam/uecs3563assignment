@@ -17,6 +17,9 @@ import { Document } from '../../services/document';
 export class DocumentRowComponent {
   // Angular Rule 5: State binding entry passing parameters from parent container downwards
   @Input() documentData!: Document;
+  @Input() index: number = 0;                                                                                                                                                                                                    
+  @Input() total: number = 0;                                                                                                                                                                                                    
+  @Input() isFirst: boolean = false;    
   // Angular Rule 5: Event emitter signaling interactive actions backwards up to child nodes
   @Output() deleteRequest = new EventEmitter<number>();
 

@@ -61,10 +61,18 @@ export class DocumentFormComponent implements OnInit {
             metadata: { title: doc.title, status: doc.status },
             content:  doc.content
           });
+          this.tags.clear();
+          if (doc.tags && doc.tags.length > 0) {
+            doc.tags.forEach(tag => this.tags.push(this.fb.control(tag)));
+          } else{
+            this.tags.push(this.fb.control(''));
+          }
         });
       }
     });
   }
+
+  
 
   addTag() {
     // Angular Rule 8: push() dynamically extends the FormArray with a new empty FormControl
@@ -83,7 +91,9 @@ export class DocumentFormComponent implements OnInit {
       const doc = {
         title:   formVal.metadata.title,
         content: formVal.content,
-        status:  formVal.metadata.status
+        status:  formVal.metadata.status,
+        tags: (formVal.tags || []).filter((t: string) => t && t.trim().length > 0) // to clean empty tags
+
       };
       if (this.isEditMode) {
         // Angular Rule 14: Programmatic navigation back to dashboard after successful PUT update

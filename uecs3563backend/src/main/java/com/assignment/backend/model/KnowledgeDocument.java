@@ -29,7 +29,7 @@ public class KnowledgeDocument {
     private KnowledgeCategory category;
 
     @ElementCollection
-    @CollectionTable(name="knowledge_docuement_tags", joinColumns = @JoinColumn(name = "document_id"))
+    @CollectionTable(name= "knowledge_document_tags", joinColumns = @JoinColumn(name = "document_id"))
     @Column(name="tag")
     private List<String> tags = new ArrayList<>();
 

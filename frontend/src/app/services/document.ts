@@ -8,6 +8,7 @@ export interface Document {
   content: string;
   status: string;
   view_count?: number;
+  tags? : string[];
 }
 
 @Injectable({ providedIn: 'root' })

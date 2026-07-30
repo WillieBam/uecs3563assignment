@@ -4,23 +4,33 @@
   <button (click)="navigateToForm()" style="margin-bottom: 15px; padding: 8px 12px; cursor: pointer;">
     Add Knowledge Document
   </button>
+    
+<!-- Angular Rule 7: Active utilization of contextual loop variables $index, $count, and $first -->                                                                                                                              
+  <div style="margin-bottom: 10px; font-size: 14px; font-weight: bold;">                                                                                                                                                           
+    Total Assets Count: {{ documents().length }}                                                                                                                                                                                   
+  </div>  
 
   <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
     <thead>
       <tr style="background-color: #f2f2f2;">
+        <th style="padding: 10px;"># Index</th>  
         <th style="padding: 10px;">Title</th>
+        <th style="padding: 10px;">Tags</th>
         <th style="padding: 10px;">Status</th>
         <th style="padding: 10px;">Actions</th>
       </tr>
-    </thead>
+    </thead>                                                                                                                                                                                                                         
     <tbody>
       @for (doc of documents(); track doc.id; let idx = $index, total = $count, isFirst = $first) {
         <tr app-document-row 
-            [documentData]="doc" 
+            [documentData]="doc"
+            [index]="idx"
+            [total]="total"
+            [isFirst]="isFirst"
             (deleteRequest)="onDeleteTriggered($event)">
-        </tr>
+        </tr>    
       } @empty {
-        <tr><td colspan="3" style="padding: 10px; text-align: center;">No documentation stored.</td></tr>
+        <tr><td colspan="4" style="padding: 10px; text-align: center;">No documentation stored.</td></tr>
       }
     </tbody>
   </table>

@@ -5,7 +5,17 @@
         <p><strong>Status:</strong> {{ doc()!.status }}</p>                                                                                                                                                                                                                    
         <p><strong>Content:</strong></p>                                                                                                                                                                                                                                    
         <p>{{ doc()!.content }}</p>                                                                                                                                                                                                                                            
-        <button (click)="goBack()">Close Detail</button>
+
+        <!-- Render Tags Pill Badges -->
+        <p><strong>Tags:</strong></p>                                                                                                                                                                                              
+        <div class="tags-container" style="display: flex; gap: 4px; flex-wrap: wrap;">                                                                                                                                                   
+          @for (tag of doc()?.tags; track tag) {                                                                                                                                                                                   
+            <span style="background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 12px; font-size: 12px;">                                                                                                                  
+              #{{ tag }}                                                                                                                                                                                                                 
+            </span>                                                                                                                                                                                                                      
+          }                                                                                                                                                                                                                              
+        </div>
+          <button (click)="goBack()">Close Detail</button>  
       </div>
     } @else {
       <p>Loading document...</p>
