@@ -1,0 +1,12 @@
+<h2>View Detail</h2>
+@if (doc()) {                                                                                                                                                                                                                                                             
+      <div style="padding: 15px;">                                                                                                                                                                                                                                          
+        <h3>{{ doc()!.title }}</h3>                                                                                                                                                                                                                                            
+        <p><strong>Status:</strong> {{ doc()!.status }}</p>                                                                                                                                                                                                                    
+        <p><strong>Content:</strong></p>                                                                                                                                                                                                                                    
+        <p>{{ doc()!.content }}</p>                                                                                                                                                                                                                                            
+        <button (click)="goBack()">Close Detail</button>
+      </div>
+    } @else {
+      <p>Loading document...</p>
+    }
