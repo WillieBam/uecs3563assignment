@@ -3,6 +3,7 @@ package com.assignment.backend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import java.util.*;
 
 @Entity
 @Data
@@ -26,4 +27,11 @@ public class KnowledgeDocument {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private KnowledgeCategory category;
+
+    @ElementCollection
+    @CollectionTable(name="knowledge_docuement_tags", joinColumns = @JoinColumn(name = "document_id"))
+    @Column(name="tag")
+    private List<String> tags = new ArrayList<>();
+
+
 }
