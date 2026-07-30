@@ -51,6 +51,7 @@ public class DocumentController {
             doc.setTitle(updatedDoc.getTitle());
             doc.setContent(updatedDoc.getContent());
             doc.setStatus(updatedDoc.getStatus());
+            doc.setTags(updatedDoc.getTags());
             return ResponseEntity.ok(documentRepository.save(doc));
         }).orElse(ResponseEntity.notFound().build());
     }
