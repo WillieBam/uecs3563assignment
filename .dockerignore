@@ -1,0 +1,8 @@
+.git
+.gitignore
+.vscode
+frontend/node_modules
+frontend/dist
+uecs3563backend/target
+uecs3563backend/data
+*.log
