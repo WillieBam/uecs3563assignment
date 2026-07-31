@@ -1,18 +1,29 @@
-<div style="margin-top: 20px;">
-  <h3>Active Sort Strategy: {{ currentSort }}</h3>
-
-  <button (click)="navigateToForm()" style="margin-bottom: 15px; padding: 8px 12px; cursor: pointer;">
-    Add Knowledge Document
+<div style="padding: 12px 18px; background: #1e293b; color: #fff; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <div>
+    <strong>User:</strong> {{ currentUser?.username }} | 
+    <strong>Team:</strong> <span style="background: #2563eb; padding: 2px 8px; border-radius: 10px; font-size: 13px;">{{ currentUser?.team }}</span>
+  </div>
+  <button (click)="logout()" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 500;">
+    Logout
   </button>
+</div>
+
+<div style="margin-top: 10px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    <h3>Active Sort Strategy: {{ currentSort }}</h3>
+    <button (click)="navigateToForm()" style="padding: 8px 14px; background: #059669; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
+      + Add Knowledge Document
+    </button>
+  </div>
     
-<!-- Angular Rule 7: Active utilization of contextual loop variables $index, $count, and $first -->                                                                                                                              
-  <div style="margin-bottom: 10px; font-size: 14px; font-weight: bold;">                                                                                                                                                           
-    Total Assets Count: {{ documents().length }}                                                                                                                                                                                   
+  <!-- Angular Rule 7: Active utilization of contextual loop variables $index, $count, and $first -->                                                                                                                              
+  <div style="margin-bottom: 10px; font-size: 14px; font-weight: bold; color: #475569;">                                                                                                                                                           
+    Total Team Documents Count: {{ documents().length }}                                                                                                                                                                                   
   </div>  
 
-  <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+  <table border="1" style="width: 100%; border-collapse: collapse; text-align: left; border-color: #e2e8f0;">
     <thead>
-      <tr style="background-color: #f2f2f2;">
+      <tr style="background-color: #f1f5f9;">
         <th style="padding: 10px;"># Index</th>  
         <th style="padding: 10px;">Title</th>
         <th style="padding: 10px;">Tags</th>
@@ -30,7 +41,7 @@
             (deleteRequest)="onDeleteTriggered($event)">
         </tr>    
       } @empty {
-        <tr><td colspan="4" style="padding: 10px; text-align: center;">No documentation stored.</td></tr>
+        <tr><td colspan="5" style="padding: 15px; text-align: center; color: #64748b;">No documents found for your team ({{ currentUser?.team }}).</td></tr>
       }
     </tbody>
   </table>
@@ -38,6 +49,6 @@
 
 <hr style="margin-top: 30px; border: 0; border-top: 1px solid #ccc;" />
 
-<div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border: 1px dashed #bbb;">
+<div style="margin-top: 20px; padding: 15px; background-color: #f8fafc; border: 1px dashed #cbd5e1;">
   <router-outlet></router-outlet>
-</div>  
+</div>

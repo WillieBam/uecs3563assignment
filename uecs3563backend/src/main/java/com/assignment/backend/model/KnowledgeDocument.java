@@ -23,6 +23,7 @@ public class KnowledgeDocument {
     
     private String status; 
     private Integer view_count = 0;
+    private String team;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

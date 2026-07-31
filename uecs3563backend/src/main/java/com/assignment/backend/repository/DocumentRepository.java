@@ -11,6 +11,8 @@ public interface DocumentRepository extends JpaRepository<KnowledgeDocument, Lon
     
     // Backend Rule 5: Derived Query based on method naming convention
     List<KnowledgeDocument> findByStatus(String status);
+    List<KnowledgeDocument> findByTeam(String team, org.springframework.data.domain.Sort sort);
+    List<KnowledgeDocument> findByTeamAndStatus(String team, String status);
 
     // Backend Rule 5: Custom JPQL Query mapping complex query logic using parameters
     @Query("SELECT d FROM KnowledgeDocument d WHERE d.view_count >= :minViews")

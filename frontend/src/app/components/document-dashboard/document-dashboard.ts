@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy,signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
 import { DocumentService, Document } from '../../services/document';
+import { AuthService } from '../../services/auth';
 import { DocumentRowComponent } from '../document-row/document-row';
 
 @Component({
@@ -13,40 +14,39 @@ import { DocumentRowComponent } from '../document-row/document-row';
 })
 // Angular Rule 4: Child component structural layer inside root component hierarchy
 export class DocumentDashboardComponent implements OnInit, OnDestroy {
- documents = signal<Document[]>([]) // singnal helps to re-render the data when there's new data added, similar like React's useState
+  documents = signal<Document[]>([]);
   selectedDocId: string | null = null;
   currentSort = 'title';
-  private sub: Subscription = new Subscription(); // Angular Rule 10: Managing RxJS Subscriptions 
+  authService = inject(AuthService);
+  private sub: Subscription = new Subscription();
 
-  // Angular Rule 12 & 14: Passing parameter states and injecting routing contexts
   constructor(
     private docService: DocumentService, 
     private router: Router, 
     private route: ActivatedRoute
   ) {}
 
+  get currentUser() {
+    return this.authService.currentUser();
+  }
+
   ngOnInit() {
     this.loadDocs();
     
-    // Angular Rule 12: Passing and capturing parameters dynamically between routed components
     this.sub.add(
       this.route.firstChild?.params.subscribe(params => {
         if (params['id']) this.selectedDocId = params['id'];
       })
     );
 
-    // Angular Rule 10: Re-fetch documents on NavigationEnd back to /dashboard to sync signal with latest backend state
     this.sub.add(
       this.router.events.pipe(
         filter(event => event instanceof NavigationEnd),
-        // checking for '/dashboard' with query param always false
-        // solution: strip off query parameter to ensure '/dashboard' is true and fires loadDocs()
         filter(event => (event as NavigationEnd).urlAfterRedirects.split('?')[0] === '/dashboard')
       ).subscribe(() => {
-        this.loadDocs(); // refresh signal with latest backend data
+        this.loadDocs();
       })
     );
-
   }
 
   loadDocs() {
@@ -58,15 +58,25 @@ export class DocumentDashboardComponent implements OnInit, OnDestroy {
   }
 
   onDeleteTriggered(id: number) {
-    this.docService.deleteDocument(id).subscribe(() => this.loadDocs());
+    this.docService.deleteDocument(id).subscribe({
+      next: () => this.loadDocs(),
+      error: (err) => {
+        const msg = typeof err.error === 'string' ? err.error : (err.error?.message || 'Failed to delete document');
+        alert(msg);
+      }
+    });
   }
 
-  // Angular Rule 14: Implementing programmatic navigation to routes cleanly via typescript code
   navigateToForm() {
     this.router.navigate(['/manage-form'], { queryParams: { mode: 'create' } });
   }
 
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
   ngOnDestroy() {
-    this.sub.unsubscribe(); // Securely clean subscriptions to eliminate memory leaks 
+    this.sub.unsubscribe();
   }
 }

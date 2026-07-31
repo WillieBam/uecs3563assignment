@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentService } from '../../services/document';
+import { DocumentService, Document } from '../../services/document';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-document-form',
@@ -13,6 +14,8 @@ import { DocumentService } from '../../services/document';
 export class DocumentFormComponent implements OnInit {
   docForm!: FormGroup;
   editId: number | null = null;
+  currentTeam: string = '';
+  private authService = inject(AuthService);
 
   constructor(
     private fb: FormBuilder,
@@ -31,6 +34,11 @@ export class DocumentFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    const user = this.authService.currentUser();
+    if (user && user.team) {
+      this.currentTeam = user.team;
+    }
+
     // Angular Rule 8: Root FormGroup containing a nested FormGroup and a FormArray
     this.docForm = this.fb.group({
       metadata: this.fb.group({           // Angular Rule 8: Nested FormGroup groups related title & status fields
@@ -55,24 +63,27 @@ export class DocumentFormComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.editId = +params['id'];
-        this.docService.getDocumentById(this.editId).subscribe(doc => {
-          // Angular Rule 8: patchValue maps backend data into the nested FormGroup structure
-          this.docForm.patchValue({
-            metadata: { title: doc.title, status: doc.status },
-            content:  doc.content
-          });
-          this.tags.clear();
-          if (doc.tags && doc.tags.length > 0) {
-            doc.tags.forEach(tag => this.tags.push(this.fb.control(tag)));
-          } else{
-            this.tags.push(this.fb.control(''));
+        this.docService.getDocumentById(this.editId).subscribe({
+          next: (doc) => {
+            this.docForm.patchValue({
+              metadata: { title: doc.title, status: doc.status },
+              content:  doc.content
+            });
+            this.tags.clear();
+            if (doc.tags && doc.tags.length > 0) {
+              doc.tags.forEach(tag => this.tags.push(this.fb.control(tag)));
+            } else {
+              this.tags.push(this.fb.control(''));
+            }
+          },
+          error: (err) => {
+            alert(err.error || 'Access denied or document not found');
+            this.router.navigate(['/dashboard']);
           }
         });
       }
     });
   }
-
-  
 
   addTag() {
     // Angular Rule 8: push() dynamically extends the FormArray with a new empty FormControl
@@ -84,26 +95,34 @@ export class DocumentFormComponent implements OnInit {
     this.tags.removeAt(index);
   }
 
+  private getErrorMessage(err: any): string {
+    if (typeof err.error === 'string') return err.error;
+    if (err.error && typeof err.error === 'object' && err.error.message) return err.error.message;
+    return err.message || 'An unexpected error occurred';
+  }
+
   onSubmit() {
     // Angular Rule 9: Validation gate — only proceeds when entire FormGroup tree is valid
     if (this.docForm.valid) {
       const formVal = this.docForm.value;
-      const doc = {
+      const doc: Document = {
         title:   formVal.metadata.title,
         content: formVal.content,
         status:  formVal.metadata.status,
-        tags: (formVal.tags || []).filter((t: string) => t && t.trim().length > 0) // to clean empty tags
-
+        tags: (formVal.tags || []).filter((t: string) => t && t.trim().length > 0),
+        team: this.currentTeam
       };
       if (this.isEditMode) {
         // Angular Rule 14: Programmatic navigation back to dashboard after successful PUT update
-        this.docService.updateDocument(this.editId!, doc).subscribe(() => {
-          this.router.navigate(['/dashboard']);
+        this.docService.updateDocument(this.editId!, doc).subscribe({
+          next: () => this.router.navigate(['/dashboard']),
+          error: (err) => alert(this.getErrorMessage(err))
         });
       } else {
         // Angular Rule 14: Programmatic navigation back to dashboard after successful POST create
-        this.docService.saveDocument(doc).subscribe(() => {
-          this.router.navigate(['/dashboard']);
+        this.docService.saveDocument(doc).subscribe({
+          next: () => this.router.navigate(['/dashboard']),
+          error: (err) => alert(this.getErrorMessage(err))
         });
       }
     }
