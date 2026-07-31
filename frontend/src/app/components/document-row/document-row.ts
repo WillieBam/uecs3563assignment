@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewEncapsulation, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Document } from '../../services/document';
@@ -14,7 +14,7 @@ import { Document } from '../../services/document';
   encapsulation: ViewEncapsulation.None
 })
 // Angular Rule 4: Grand-child component layer completing the hierarchical chain sequence
-export class DocumentRowComponent {
+export class DocumentRowComponent implements OnChanges {
   // Angular Rule 5: State binding entry passing parameters from parent container downwards
   @Input() documentData!: Document;
   @Input() index: number = 0;                                                                                                                                                                                                    
@@ -23,7 +23,12 @@ export class DocumentRowComponent {
   // Angular Rule 5: Event emitter signaling interactive actions backwards up to child nodes
   @Output() deleteRequest = new EventEmitter<number>();
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private cdr: ChangeDetectorRef) {}
+
+  // explicitly  mark view for change detection on input updates to ensure DOM re-renders in static production builds
+  ngOnChanges(changes: SimpleChanges): void {
+    this.cdr.markForCheck();
+  }
 
   emitDelete() {
     // Angular Rule 3 & 5: Event binding triggers OutputEmitter to propagate delete ID to parent

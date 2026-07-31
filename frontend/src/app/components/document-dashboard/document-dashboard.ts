@@ -37,13 +37,15 @@ export class DocumentDashboardComponent implements OnInit, OnDestroy {
 
     // Angular Rule 10: Re-fetch documents on NavigationEnd back to /dashboard to sync signal with latest backend state
     this.sub.add(
-          this.router.events.pipe(
-            filter(event => event instanceof NavigationEnd),
-            filter(event => (event as NavigationEnd).urlAfterRedirects === '/dashboard')
-          ).subscribe(() => {
-            this.loadDocs(); // refresh signal with latest backend data
-          })
-        );
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd),
+        // checking for '/dashboard' with query param always false
+        // solution: strip off query parameter to ensure '/dashboard' is true and fires loadDocs()
+        filter(event => (event as NavigationEnd).urlAfterRedirects.split('?')[0] === '/dashboard')
+      ).subscribe(() => {
+        this.loadDocs(); // refresh signal with latest backend data
+      })
+    );
 
   }
 

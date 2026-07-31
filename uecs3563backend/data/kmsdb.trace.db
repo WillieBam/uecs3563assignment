@@ -1,0 +1,18 @@
+2026-07-30 22:52:51.072510+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "KNOWLEDGE_DOCUMENT" not found (this database is empty); SQL statement:
+insert into knowledge_document (category_id,content,status,title,view_count,id) values (?,?,?,?,?,default) [42104-240]
+2026-07-30 22:52:55.423447+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "KNOWLEDGE_DOCUMENT" not found (this database is empty); SQL statement:
+select kd1_0.id,kd1_0.category_id,kd1_0.content,kd1_0.status,kd1_0.title,kd1_0.view_count from knowledge_document kd1_0 order by kd1_0.title [42104-240]
+2026-07-30 22:52:58.288777+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "KNOWLEDGE_DOCUMENT" not found (this database is empty); SQL statement:
+select kd1_0.id,kd1_0.category_id,kd1_0.content,kd1_0.status,kd1_0.title,kd1_0.view_count from knowledge_document kd1_0 order by kd1_0.title [42104-240]
+2026-07-30 22:53:02.865711+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "KNOWLEDGE_DOCUMENT" not found (this database is empty); SQL statement:
+select kd1_0.id,kd1_0.category_id,kd1_0.content,kd1_0.status,kd1_0.title,kd1_0.view_count from knowledge_document kd1_0 order by kd1_0.title [42104-240]
+2026-07-30 22:53:06.982987+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "KNOWLEDGE_DOCUMENT" not found (this database is empty); SQL statement:
+select kd1_0.id,kd1_0.category_id,kd1_0.content,kd1_0.status,kd1_0.title,kd1_0.view_count from knowledge_document kd1_0 order by kd1_0.title [42104-240]
+2026-07-30 22:53:21.947909+08:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "KNOWLEDGE_DOCUMENT" not found (this database is empty); SQL statement:
+select kd1_0.id,kd1_0.category_id,kd1_0.content,kd1_0.status,kd1_0.title,kd1_0.view_count from knowledge_document kd1_0 order by kd1_0.title [42104-240]

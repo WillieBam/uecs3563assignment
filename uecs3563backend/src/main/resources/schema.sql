@@ -22,10 +22,10 @@ CREATE TABLE IF NOT EXISTS knowledge_document_tags (
 );
 
 -- Pre-populating the database tables with initial records to correspond with domain entities
-INSERT INTO knowledge_category (name, description) VALUES ('IT Support FAQs', 'Common tech support resolutions');
-INSERT INTO knowledge_document (category_id, title, content, status, view_count) VALUES (1, 'VPN Reset', 'Steps to reset corporate VPN', 'Approved', 150);
-INSERT INTO knowledge_document (category_id, title, content, status, view_count) VALUES (1, 'System Setup', 'Drafting core workstation environment scripts', 'Draft', 5);
+MERGE INTO knowledge_category (id, name, description) KEY(id) VALUES (1, 'IT Support FAQs', 'Common tech support resolutions');
+MERGE INTO knowledge_document (id, category_id, title, content, status, view_count) KEY(id) VALUES (1, 1, 'VPN Reset', 'Steps to reset corporate VPN', 'Approved', 150);
+MERGE INTO knowledge_document (id, category_id, title, content, status, view_count) KEY(id) VALUES (2, 1, 'System Setup', 'Drafting core workstation environment scripts', 'Draft', 5);
 
-INSERT INTO knowledge_document_tags (document_id, tag) VALUES (1, 'VPN');
-INSERT INTO knowledge_document_tags (document_id, tag) VALUES (1, 'Network');
-INSERT INTO knowledge_document_tags (document_id, tag) VALUES (2, 'Setup');
+MERGE INTO knowledge_document_tags (document_id, tag) KEY(document_id, tag) VALUES (1, 'VPN');
+MERGE INTO knowledge_document_tags (document_id, tag) KEY(document_id, tag) VALUES (1, 'Network');
+MERGE INTO knowledge_document_tags (document_id, tag) KEY(document_id, tag) VALUES (2, 'Setup');
