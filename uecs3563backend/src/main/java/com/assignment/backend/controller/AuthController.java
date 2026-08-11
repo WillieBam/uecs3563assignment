@@ -1,6 +1,5 @@
 package com.assignment.backend.controller;
 
-import com.assignment.backend.model.User;
 import com.assignment.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

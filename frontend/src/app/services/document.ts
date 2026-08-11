@@ -30,8 +30,8 @@ export class DocumentService {
   }
 
   // Returns an RxJS Observable performing asynchronous network interactions via GET 
-  getDocuments(sortBy: string): Observable<Document[]> {
-    return this.http.get<Document[]>(`${this.apiUrl}?sortBy=${sortBy}`, { headers: this.getAuthHeaders() });
+  getDocuments(sort: string = 'title'): Observable<Document[]> {
+    return this.http.get<Document[]>(`${this.apiUrl}?sort=${sort}`, { headers: this.getAuthHeaders() });
   }
 
   // Performs an asynchronous POST request to save data into backend 

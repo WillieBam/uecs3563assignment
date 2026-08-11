@@ -1,4 +1,8 @@
 <div style="max-width: 600px; margin-top: 20px; font-family: sans-serif;">
+  <button type="button" (click)="onCancel()" style="background: transparent; color: #2563eb; border: none; padding: 0; cursor: pointer; font-size: 14px; font-weight: 600; margin-bottom: 12px; display: inline-block;">
+    Back to Dashboard
+  </button>
+
   <!-- Angular Rule 1: Interpolation dynamically switches heading between create/edit modes -->
   <h2>{{ isEditMode ? 'Edit Knowledge Asset' : 'Configure Enterprise Knowledge Asset' }}</h2>
 
@@ -53,8 +57,13 @@
       <button type="button" (click)="addTag()" style="padding: 5px 12px; cursor: pointer; margin-top: 4px;">+ Add Tag</button>
     </div>
 
-    <button type="submit" [disabled]="docForm.invalid" style="padding: 10px; background: #007bff; color: white; border: none; cursor: pointer;">
-      {{ isEditMode ? 'Update Document' : 'Save Database Context' }}
-    </button>
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+      <button type="submit" [disabled]="docForm.invalid" style="flex: 1; padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
+        {{ isEditMode ? 'Update Document' : 'Save Database Context' }}
+      </button>
+      <button type="button" (click)="onCancel()" style="padding: 10px 18px; background: #64748b; color: white; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
+        Cancel
+      </button>
+    </div>
   </form>
 </div>

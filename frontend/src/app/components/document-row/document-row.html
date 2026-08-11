@@ -36,9 +36,15 @@
 <!-- Angular Rule 3: (click) event bindings trigger navigation and delete actions -->
 <td style="padding: 10px;">
   <button (click)="viewItem()"
-    style="color: white; background: #3591dc; border: none; padding: 4px 8px; cursor: pointer;">View Details</button>
+    style="color: white; background: #3591dc; border: none; padding: 4px 8px; cursor: pointer; border-radius: 3px;">View Details</button>
   <button (click)="editItem()"
-    style="color: white; background: #edad17; border: none; padding: 4px 8px; cursor: pointer;">Edit</button>
+    style="color: white; background: #edad17; border: none; padding: 4px 8px; cursor: pointer; border-radius: 3px;">
+    {{ isEditing ? 'Editing...' : 'Edit' }}
+  </button>
   <button (click)="emitDelete()"
-    style="color: white; background: #dc3545; border: none; padding: 4px 8px; cursor: pointer;">Remove</button>
+    [disabled]="isEditing"
+    [title]="isEditing ? 'Cannot remove document while it is actively being edited below' : 'Remove document'"
+    [style.opacity]="isEditing ? '0.45' : '1'"
+    [style.cursor]="isEditing ? 'not-allowed' : 'pointer'"
+    style="color: white; background: #dc3545; border: none; padding: 4px 8px; border-radius: 3px;">Remove</button>
 </td>

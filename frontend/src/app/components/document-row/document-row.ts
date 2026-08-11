@@ -20,8 +20,17 @@ export class DocumentRowComponent implements OnChanges {
   @Input() index: number = 0;                                                                                                                                                                                                    
   @Input() total: number = 0;                                                                                                                                                                                                    
   @Input() isFirst: boolean = false;    
+  @Input() selectedDocId: string | null = null;
   // Angular Rule 5: Event emitter signaling interactive actions backwards up to child nodes
   @Output() deleteRequest = new EventEmitter<number>();
+
+  get isEditing(): boolean {
+    if (!this.documentData || !this.documentData.id) return false;
+    const url = this.router.url;
+    const matchesUrl = url.includes('/dashboard/edit/' + this.documentData.id) || url.includes('/dashboard/view/' + this.documentData.id);
+    const matchesInput = !!(this.selectedDocId && String(this.selectedDocId) === String(this.documentData.id));
+    return matchesUrl || matchesInput;
+  }
 
   constructor(private router: Router, private cdr: ChangeDetectorRef) {}
 
@@ -32,6 +41,7 @@ export class DocumentRowComponent implements OnChanges {
 
   emitDelete() {
     // Angular Rule 3 & 5: Event binding triggers OutputEmitter to propagate delete ID to parent
+    if (this.isEditing) return;
     if (this.documentData.id) {
       this.deleteRequest.emit(this.documentData.id);
     }

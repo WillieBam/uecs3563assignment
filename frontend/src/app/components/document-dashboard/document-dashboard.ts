@@ -33,18 +33,27 @@ export class DocumentDashboardComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadDocs();
     
-    this.sub.add(
-      this.route.firstChild?.params.subscribe(params => {
-        if (params['id']) this.selectedDocId = params['id'];
-      })
-    );
+    // Track selected document ID from current URL or route navigation
+    const initialMatch = this.router.url.match(/\/dashboard\/(?:edit|view)\/(\d+)/);
+    if (initialMatch) {
+      this.selectedDocId = initialMatch[1];
+    }
 
     this.sub.add(
       this.router.events.pipe(
-        filter(event => event instanceof NavigationEnd),
-        filter(event => (event as NavigationEnd).urlAfterRedirects.split('?')[0] === '/dashboard')
-      ).subscribe(() => {
-        this.loadDocs();
+        filter(event => event instanceof NavigationEnd)
+      ).subscribe((event) => {
+        const url = (event as NavigationEnd).urlAfterRedirects || this.router.url;
+        const match = url.match(/\/dashboard\/(?:edit|view)\/(\d+)/);
+        if (match) {
+          this.selectedDocId = match[1];
+        } else {
+          this.selectedDocId = null;
+        }
+
+        if (url.split('?')[0] === '/dashboard') {
+          this.loadDocs();
+        }
       })
     );
   }
@@ -57,9 +66,23 @@ export class DocumentDashboardComponent implements OnInit, OnDestroy {
     );
   }
 
+  onSortChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    if (target && target.value) {
+      this.currentSort = target.value;
+      this.loadDocs();
+    }
+  }
+
   onDeleteTriggered(id: number) {
     this.docService.deleteDocument(id).subscribe({
-      next: () => this.loadDocs(),
+      next: () => {
+        if (this.selectedDocId && Number(this.selectedDocId) === id) {
+          this.selectedDocId = null;
+          this.router.navigate(['/dashboard']);
+        }
+        this.loadDocs();
+      },
       error: (err) => {
         const msg = typeof err.error === 'string' ? err.error : (err.error?.message || 'Failed to delete document');
         alert(msg);
