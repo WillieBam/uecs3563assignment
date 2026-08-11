@@ -95,6 +95,10 @@ export class DocumentFormComponent implements OnInit {
     this.tags.removeAt(index);
   }
 
+  onCancel() {
+    this.router.navigate(['/dashboard']);
+  }
+
   private getErrorMessage(err: any): string {
     if (typeof err.error === 'string') return err.error;
     if (err.error && typeof err.error === 'object' && err.error.message) return err.error.message;
@@ -116,7 +120,12 @@ export class DocumentFormComponent implements OnInit {
         // Angular Rule 14: Programmatic navigation back to dashboard after successful PUT update
         this.docService.updateDocument(this.editId!, doc).subscribe({
           next: () => this.router.navigate(['/dashboard']),
-          error: (err) => alert(this.getErrorMessage(err))
+          error: (err) => {
+            alert(this.getErrorMessage(err));
+            if (err.status === 404) {
+              this.router.navigate(['/dashboard']);
+            }
+          }
         });
       } else {
         // Angular Rule 14: Programmatic navigation back to dashboard after successful POST create
