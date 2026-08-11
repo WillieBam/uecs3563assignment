@@ -67,7 +67,13 @@ export class DocumentDashboardComponent implements OnInit, OnDestroy {
 
   onDeleteTriggered(id: number) {
     this.docService.deleteDocument(id).subscribe({
-      next: () => this.loadDocs(),
+      next: () => {
+        if (this.selectedDocId && Number(this.selectedDocId) === id) {
+          this.selectedDocId = null;
+          this.router.navigate(['/dashboard']);
+        }
+        this.loadDocs();
+      },
       error: (err) => {
         const msg = typeof err.error === 'string' ? err.error : (err.error?.message || 'Failed to delete document');
         alert(msg);
