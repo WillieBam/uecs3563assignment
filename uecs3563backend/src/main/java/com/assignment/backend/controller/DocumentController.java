@@ -83,19 +83,20 @@ public class DocumentController {
             @Valid @RequestBody KnowledgeDocument updatedDoc,
             @RequestHeader(value = "X-User-Team", required = false) String userTeam) {
 
-        return documentRepository.findById(id).map(doc -> {
-            if (userTeam != null && !userTeam.trim().isEmpty() && doc.getTeam() != null && !doc.getTeam().equalsIgnoreCase(userTeam)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied: Document belongs to team " + doc.getTeam());
-            }
-            doc.setTitle(updatedDoc.getTitle());
-            doc.setContent(updatedDoc.getContent());
-            doc.setStatus(updatedDoc.getStatus());
-            doc.setTags(updatedDoc.getTags());
-            if (updatedDoc.getTeam() != null && !updatedDoc.getTeam().trim().isEmpty()) {
-                doc.setTeam(updatedDoc.getTeam());
-            }
-            return ResponseEntity.ok((Object) documentRepository.save(doc));
-        }).orElse(ResponseEntity.notFound().build());
+        KnowledgeDocument doc = documentRepository.findById(id)
+                .orElseThrow(() -> new com.assignment.backend.exception.ResourceNotFoundException("Knowledge document not found with id: " + id));
+
+        if (userTeam != null && !userTeam.trim().isEmpty() && doc.getTeam() != null && !doc.getTeam().equalsIgnoreCase(userTeam)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied: Document belongs to team " + doc.getTeam());
+        }
+        doc.setTitle(updatedDoc.getTitle());
+        doc.setContent(updatedDoc.getContent());
+        doc.setStatus(updatedDoc.getStatus());
+        doc.setTags(updatedDoc.getTags());
+        if (updatedDoc.getTeam() != null && !updatedDoc.getTeam().trim().isEmpty()) {
+            doc.setTeam(updatedDoc.getTeam());
+        }
+        return ResponseEntity.ok(documentRepository.save(doc));
     }
 
     // Backend Rule 4: CRUD Delete operation with team RBAC check
@@ -104,13 +105,14 @@ public class DocumentController {
             @PathVariable Long id,
             @RequestHeader(value = "X-User-Team", required = false) String userTeam) {
 
-        return documentRepository.findById(id).map(doc -> {
-            if (userTeam != null && !userTeam.trim().isEmpty() && doc.getTeam() != null && !doc.getTeam().equalsIgnoreCase(userTeam)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied: Document belongs to team " + doc.getTeam());
-            }
-            documentRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }).orElse(ResponseEntity.notFound().build());
+        KnowledgeDocument doc = documentRepository.findById(id)
+                .orElseThrow(() -> new com.assignment.backend.exception.ResourceNotFoundException("Knowledge document not found with id: " + id));
+
+        if (userTeam != null && !userTeam.trim().isEmpty() && doc.getTeam() != null && !doc.getTeam().equalsIgnoreCase(userTeam)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied: Document belongs to team " + doc.getTeam());
+        }
+        documentRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
@@ -118,11 +120,12 @@ public class DocumentController {
             @PathVariable Long id,
             @RequestHeader(value = "X-User-Team", required = false) String userTeam) {
 
-        return documentRepository.findById(id).map(doc -> {
-            if (userTeam != null && !userTeam.trim().isEmpty() && doc.getTeam() != null && !doc.getTeam().equalsIgnoreCase(userTeam)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied: Document belongs to team " + doc.getTeam());
-            }
-            return ResponseEntity.ok((Object) doc);
-        }).orElse(ResponseEntity.notFound().build());
+        KnowledgeDocument doc = documentRepository.findById(id)
+                .orElseThrow(() -> new com.assignment.backend.exception.ResourceNotFoundException("Knowledge document not found with id: " + id));
+
+        if (userTeam != null && !userTeam.trim().isEmpty() && doc.getTeam() != null && !doc.getTeam().equalsIgnoreCase(userTeam)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied: Document belongs to team " + doc.getTeam());
+        }
+        return ResponseEntity.ok(doc);
     }
 }
