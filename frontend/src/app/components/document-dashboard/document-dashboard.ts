@@ -57,6 +57,14 @@ export class DocumentDashboardComponent implements OnInit, OnDestroy {
     );
   }
 
+  onSortChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    if (target && target.value) {
+      this.currentSort = target.value;
+      this.loadDocs();
+    }
+  }
+
   onDeleteTriggered(id: number) {
     this.docService.deleteDocument(id).subscribe({
       next: () => this.loadDocs(),

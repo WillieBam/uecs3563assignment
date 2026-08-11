@@ -4,15 +4,16 @@ import com.assignment.backend.model.KnowledgeDocument;
 import com.assignment.backend.repository.DocumentRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import com.assignment.backend.strategy.DocumentSortContext;
+
 @RestController
-@RequestMapping("/api/documents")
+@RequestMapping({"/api/documents", "/document"})
 @CrossOrigin(origins = "*")
 // Backend Rule 2: @RestController annotation applied cleanly to expose endpoints
 public class DocumentController {
@@ -20,18 +21,28 @@ public class DocumentController {
     @Autowired
     private DocumentRepository documentRepository;
 
-    // Backend Rule 1 & 4: GET documents with Team filtering and Sorting capability
+    @Autowired
+    private DocumentSortContext documentSortContext;
+
+    // Backend Rule 1 & 4: GET documents with Team filtering and Strategy-based Sorting capability
     @GetMapping
     public List<KnowledgeDocument> getAllDocuments(
-            @RequestParam(defaultValue = "title") String sortBy,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String sortBy,
             @RequestHeader(value = "X-User-Team", required = false) String headerTeam,
             @RequestParam(required = false) String team) {
 
+        String selectedSort = (sort != null && !sort.trim().isEmpty()) ? sort : sortBy;
         String effectiveTeam = (headerTeam != null && !headerTeam.trim().isEmpty()) ? headerTeam : team;
+
+        List<KnowledgeDocument> docs;
         if (effectiveTeam != null && !effectiveTeam.trim().isEmpty()) {
-            return documentRepository.findByTeam(effectiveTeam, Sort.by(sortBy).ascending());
+            docs = documentRepository.findByTeam(effectiveTeam);
+        } else {
+            docs = documentRepository.findAll();
         }
-        return documentRepository.findAll(Sort.by(sortBy).ascending());
+
+        return documentSortContext.executeSort(selectedSort, docs);
     }
 
     // Backend Rule 1 & 5: Derived query driven by an HTTP Query Parameter
